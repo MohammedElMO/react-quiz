@@ -32,7 +32,9 @@ export const useQuestions = () => {
           type: ActionKind.FETCH_QUESTIONS,
           payload: data,
         })
-        
+        dispatch({
+          type: ActionKind.START_STATUS,
+        })
       } catch (e) {
         if (e instanceof Error)
           dispatch({
@@ -41,11 +43,11 @@ export const useQuestions = () => {
       }
     }
     getQuestions()
-
+   
     return () => controller.abort()
   }, [])
   return {
     states,
-    dispatch
+    dispatch,
   }
 }

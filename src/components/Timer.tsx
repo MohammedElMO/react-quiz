@@ -5,11 +5,13 @@ function Timer({
   activeQuestion,
   isReset,
   showToaster,
+  onEnd,
 }: {
   time: string
   activeQuestion: boolean
   isReset: boolean
   showToaster: (isTimeOut: boolean) => void
+  onEnd: () => void
 }) {
   const minutes = parseInt(time.split(":")[0])
   const seconds = parseInt(time.split(":")[1])
@@ -48,6 +50,10 @@ function Timer({
     }, 1000)
 
     showToaster(min === 0 && sec === 0)
+
+    if (min === 0 && sec === 0) onEnd()
+    // if(min < 2 && sec <= 60 && !activeQuestion || min !== 0 && sec !== 0)
+    //   activateSound()
 
     return () => {
       clearTimeout(timerMin)

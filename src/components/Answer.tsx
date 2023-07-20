@@ -12,14 +12,13 @@ function Answer({
   choosenAnswer,
   isQuestionActive,
 }: AnswerProps) {
-  console.log(data.correctOption)
 
   return (
     <>
       <h3>{data.question}</h3>
       {data.options.map((a,idx) => (
-        <li
-          aria-disabled={isQuestionActive}
+        <button
+          disabled={isQuestionActive}
           key={a}
           className={`btn btn-option ${
             choosenAnswer === idx && "answer"
@@ -34,7 +33,7 @@ function Answer({
           onClick={() => handleChooseAnswer(data.options.indexOf(a))}
         >
           {a}
-        </li>
+        </button>
       ))}
     </>
   )

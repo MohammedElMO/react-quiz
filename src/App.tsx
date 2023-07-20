@@ -1,20 +1,27 @@
-import { useReducer, useState } from "react"
+import { useReducer } from "react"
 import {
   ProgressKind,
   ProgressReducer,
   initalState,
 } from "./Reducers/QAReducer"
 import { ActionKind } from "./Reducers/questionReducer"
-import AnswerOptions from "./components/AnswerOptions"
-import Intro from "./components/Intro"
-import Header from "./components/Layout/Header"
-import Main from "./components/Layout/Main"
-import QuestionProgress from "./components/QuestionProgress"
-import Result from "./components/Result"
-import Button from "./components/common/Button"
 import { useQuestions } from "./hooks/useQuestions"
-import Timer from "./components/Timer"
-import EndingToaster from "./components/EndingToaster"
+import {
+  AnswerOptions,
+  Button,
+  EndingToaster,
+  Error,
+  Finish,
+  Header,
+  Intro,
+  Loader,
+  Main,
+  QuestionProgress,
+  Result,
+  Timer,
+} from "./components"
+import ScoreToaster from "./components/ScoreToaster"
+
 function App() {
   const { states, dispatch: dispatchState } = useQuestions()
   const [
@@ -25,11 +32,15 @@ function App() {
       isQuestionsActive,
       points,
       reset,
-      isToasted
+      isToasted,
     },
     dispatchQInfo,
   ] = useReducer(ProgressReducer, initalState)
-  const time = "5:00"
+  const time = "2:00"
+  const maxPoints = states.questions.reduce(
+    (totalPoints, point) => totalPoints + point.points,
+    0
+  )
 
   const handleSelectedAnswer = (AnswerIndex: number) => {
     dispatchQInfo({
@@ -70,22 +81,44 @@ function App() {
       payload: !isQuestionsActive,
     })
   }
-  const showToaster = (isToasted:boolean) => {
+  const EndQuiz = () => {
+    dispatchState({
+      type: ActionKind.FINISHED_STATUS,
+    })
+  }
+
+  const showToaster = (isToasted: boolean) => {
     dispatchQInfo({
       type: ProgressKind.TOAST_ON,
       payload: isToasted,
     })
   }
 
-
   return (
     <div className="app">
-      <EndingToaster when={isToasted}/>
+      <EndingToaster when={isToasted} />
+      <ScoreToaster score={points} when={isToasted} />
       <Header />
       <Main>
-        {states.status === "active"? (
+        {states.status === "loading" && <Loader />}
+        {states.status === "error" && <Error />}
+        {states.status === "start" && (
+          <Intro questionCount={states.questions.length}>
+            <Button
+              className="btn"
+              onClick={() =>
+                dispatchState({
+                  type: ActionKind.ACTIVE_STATUS,
+                })
+              }
+            >
+              let's start!
+            </Button>
+          </Intro>
+        )}
+        {states.status === "active" && (
           <>
-            <QuestionProgress points={points} qCount={complatedQuestion} />
+            <QuestionProgress onEnd={EndQuiz} points={points} qCount={complatedQuestion} />
             <AnswerOptions
               isQuestionActive={isQuestionsActive}
               QA={states.questions[indexAtQuestion]}
@@ -94,6 +127,7 @@ function App() {
               choosenAnswer={answer}
             />
             <Timer
+              onEnd={EndQuiz}
               isReset={reset}
               time={time}
               activeQuestion={isQuestionsActive}
@@ -101,23 +135,20 @@ function App() {
             />
 
             {states.questions[answer!] && (
-              <Result onNextQuestion={handleNextQuestion} />
+              <Result>
+                <Button
+                  disabled={isToasted}
+                  className="btn"
+                  onClick={handleNextQuestion}
+                >
+                  Next
+                </Button>
+              </Result>
             )}
           </>
-        ) : (
-          <Intro questionCount={states.questions.length}>
-            <Button
-              className="btn"
-              disabled={states.status === "loading"}
-              onClick={() =>
-                dispatchState({
-                  type: ActionKind.ACTIVE_STATUS,
-                })
-              }
-            >
-              {states.status === "loading" ? "...starting" : "let's start!"}
-            </Button>
-          </Intro>
+        )}
+        {states.status === "finished" && (
+          <Finish points={points} maxPoints={maxPoints} />
         )}
       </Main>
     </div>

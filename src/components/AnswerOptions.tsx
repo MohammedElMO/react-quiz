@@ -18,21 +18,14 @@ function AnswerOptions({
   handleSelectedAnswer: (a: number) => void
 }) {
   return (
-    <ul className="options">
-      {states.status === "error" && (
-        <span className="error">Error! cannot display Questions</span>
-      )}
-      {states.status === "loading" ? (
-        <Loader />
-      ) : (
+    <div className="options">
         <Answer
           isQuestionActive={isQuestionActive}
           choosenAnswer={choosenAnswer}
           handleChooseAnswer={handleSelectedAnswer}
           data={QA}
         />
-      )}
-    </ul>
+    </div>
   )
 }
 

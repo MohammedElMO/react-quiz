@@ -1,4 +1,4 @@
-import reactImg from "../../../public/pngwing.com.png"
+import reactImg from "../../../public/assets/pngwing.com.png"
 function Header() {
   return (
     <header className='app-header'>

@@ -1,17 +1,8 @@
+import { ReactNode } from "react"
 import Button from "./common/Button"
 
-function Result({
-  onNextQuestion,
-}: {
-  onNextQuestion: () => void
-}) {
-  return (
-    <div className="flex">
-      <Button className="btn" onClick={onNextQuestion}>
-        Next
-      </Button>
-    </div>
-  )
+function Result({ children }: { children: ReactNode }) {
+  return <div className="flex">{children}</div>
 }
 
 export default Result

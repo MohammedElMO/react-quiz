@@ -251,7 +251,13 @@ progress {
   font-weight: bold;
   margin: 6rem;
 }
+.finish{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
 
+}
 .counter * {
   font-size: inherit;
   padding: 0.8rem;
@@ -261,9 +267,7 @@ progress {
   justify-content: space-between;
   flex-direction: row-reverse;
 }
-li[aria-disabled="true"] {
-  cursor: not-allowed;
-}
+
 
 .wrongTime {
   background-color: var(--color-accent);

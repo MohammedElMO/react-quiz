@@ -4,8 +4,7 @@ export enum ActionKind {
   LOADING_STATUS = "LOADING_STATUS",
   ACTIVE_STATUS = "ACTIVE_STATUS",
   FINISHED_STATUS = "FINISHED_STATUS",
-  ON_NEXT_QUESTION = "ON_NEXT_QUESTION",
-  
+  START_STATUS = "START_STATUS",
 }
 
 export type ResponseJSON = {
@@ -34,6 +33,7 @@ export interface State {
     | "active"
     | "finished"
     | "next"
+    | "start"
     | string
 }
 
@@ -54,20 +54,22 @@ export const questionReducer = (data: State, action: Action) => {
         ...data,
         status: "loading",
       }
-    case ActionKind.FINISHED_STATUS:
-      return {
-        ...data,
-        status: "finished",
-      }
+
     case ActionKind.ACTIVE_STATUS:
       return {
         ...data,
         status: "active",
       }
-    case ActionKind.ON_NEXT_QUESTION:
+
+    case ActionKind.START_STATUS:
       return {
         ...data,
-        status: "next",
+        status: "start",
+      }
+    case ActionKind.FINISHED_STATUS:
+      return {
+        ...data,
+        status: "finished",
       }
   }
 }
